@@ -1,28 +1,16 @@
 #include <Adafruit_GFX.h>
 #include <gfxfont.h>
-
 #include <Adafruit_NeoMatrix.h>
 #include <gamma.h>
-
 #include <Adafruit_DotStar.h>
-
-// This is a demonstration on how to use an input device to trigger changes on your neo pixels.
-// You should wire a momentary push button to connect from ground to a digital IO pin.  When you
-// press the button it will change to a new pixel animation.  Note that you need to press the
-// button once to start the first animation!
-//https://github.com/adafruit/Adafruit_NeoPixel/blob/master/examples/buttoncycler/buttoncycler.ino
-
 #include <Adafruit_NeoPixel.h>
 
 #define BUTTON_PIN   6    // Digital IO pin connected to the button.  This will be
                           // driven with a pull-up resistor so the switch should
                           // pull the pin to ground momentarily.  On a high -> low
                           // transition the button press logic will execute.
-
 #define PIXEL_PIN    12    // Digital IO pin connected to the NeoPixels.
-
 #define PIXEL_COUNT 90
-
 // Parameter 1 = number of pixels in strip,  neopixel stick has 8
 // Parameter 2 = pin number (most are valid)
 // Parameter 3 = pixel type flags, add together as needed:
@@ -59,7 +47,6 @@ void loop() {
       startShow(showType);
     }
   }
-
   // Set the last button state to the old state.
   oldState = newState;
 }
@@ -86,12 +73,8 @@ void startShow(int i) {
             break;
     case 9: rainbow2(0);
             break;
-//    case 10: swirl(0);
-//            break;
-
   }
 }
-
 
 void colorWipe(uint32_t c, uint8_t wait) {
   for(uint16_t i=0; i<strip.numPixels(); i++) {
@@ -107,38 +90,33 @@ void rainbow1(uint8_t wait) {
   for(j=0; (j<256*100) && (stop==0); j++) { // 5 cycles of all colors on wheel
     for(i=0; i< strip.numPixels(); i++) {
       strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
-    strip.show();
-    delay(wait);
+      strip.show();
+      delay(wait);
     }
     // Get current button state.
     bool newState = digitalRead(BUTTON_PIN);
-            
-      // Check if state changed from high to low (button press).
-      if (newState == LOW && oldState == HIGH) {
-          stop=1;
-        // Short delay to debounce button.
-        delay(20);
-       // Check if button is still low after debounce.
-        newState = digitalRead(BUTTON_PIN);
+      
+    // Check if state changed from high to low (button press).
+    if (newState == LOW && oldState == HIGH) {
+      stop=1;
+      // Short delay to debounce button.
+      delay(20);
+      // Check if button is still low after debounce.
+      newState = digitalRead(BUTTON_PIN);
   
-        if (newState == LOW){
-          stop=1;
-        }
-        if (newState == LOW && showType == 8) {
-           showType=9;
-           startShow(showType);
-        }          
+      if (newState == LOW){
+        stop=1;
       }
-
+        
+      if (newState == LOW && showType == 8) {
+        showType=9;
+        startShow(showType);
+      }          
+    }
       // Set the last button state to the old state.
-      oldState = newState;
+    oldState = newState;
   }
 }
-
-
-
-  
-
     
 void rainbow2(uint8_t wait) {
   uint16_t i, j;
@@ -146,36 +124,33 @@ void rainbow2(uint8_t wait) {
   for(j=0; (j<256*100) && (stop==0); j++) {
     for(i=0; i<strip.numPixels(); i++) {
       bool newState = digitalRead(BUTTON_PIN);
-    strip.setPixelColor(i, Wheel((i+j) & 255));
-    strip.show();
-    delay(wait);
+      strip.setPixelColor(i, Wheel((i+j) & 255));
+      strip.show();
+      delay(wait);
     }
-    
     // Get current button state.
     bool newState = digitalRead(BUTTON_PIN);
-            
-      // Check if state changed from high to low (button press).
-      if (newState == LOW && oldState == HIGH) {
-        stop=1;
+    // Check if state changed from high to low (button press).
+    if (newState == LOW && oldState == HIGH) {
+      stop=1;
       // Short delay to debounce button.
       delay(20);
-//      // Check if button is still low after debounce.
+      // Check if button is still low after debounce.
       newState = digitalRead(BUTTON_PIN);
 
       if (newState == LOW){
         stop=1;
       }
-                                    if (newState == LOW && showType == 9) {
-                                      showType=0; 
-                                      startShow(showType);
-                                    }          
-      }            
-      // Set the last button state to the old state.
-      oldState = newState;
+      
+      if (newState == LOW && showType == 9) {
+        showType=0; 
+        startShow(showType);
+      }          
+    }            
+    // Set the last button state to the old state.
+    oldState = newState;
   }
 }
-
-
 
 // Input a value 0 to 255 to get a color value.
 // The colours are a transition r - g - b - back to r.
@@ -191,11 +166,3 @@ uint32_t Wheel(byte WheelPos) {
   WheelPos -= 170;
   return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
 }
-
-
-
-
-
-
-
-
